@@ -8,7 +8,7 @@ function AdminRegister() {
         name: '',
         email: '',
         password: '',
-        confirmPassword: '',
+        // confirmPassword: '',
         role: 'admin'
     });
     const [loading, setLoading] = useState(false);
@@ -28,12 +28,7 @@ function AdminRegister() {
         setError('');
         setSuccess('');
 
-        // Validate passwords match
-        if (formData.password !== formData.confirmPassword) {
-            setError('Passwords do not match');
-            setLoading(false);
-            return;
-        }
+       
 
         try {
             // Submit to API
