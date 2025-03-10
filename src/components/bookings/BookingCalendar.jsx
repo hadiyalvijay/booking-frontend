@@ -85,8 +85,8 @@ const BookingCalendar = () => {
         }
 
         const url = id
-          ? `http://localhost:4000/api/bookings/${id}`
-          : `http://localhost:4000/api/bookings`;
+          ? `http://booking-backend-five.vercel.app/api/bookings/${id}`
+          : `http://booking-backend-five.vercel.app/api/bookings`;
 
         const res = await axios.get(url, {
           headers: { Authorization: `Bearer ${token}` },

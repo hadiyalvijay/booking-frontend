@@ -35,9 +35,9 @@ const FinancialSummary = () => {
 
         const headers = { Authorization: `Bearer ${token}` };
 
-        const revenueRes = await axios.get('http://localhost:4000/api/payments', { headers });
-        const expensesRes = await axios.get('http://localhost:4000/api/expenses', { headers });
-        const bookingsRes = await axios.get('http://localhost:4000/api/bookings', { headers });
+        const revenueRes = await axios.get('http://booking-backend-five.vercel.app/api/payments', { headers });
+        const expensesRes = await axios.get('http://booking-backend-five.vercel.app/api/expenses', { headers });
+        const bookingsRes = await axios.get('http://booking-backend-five.vercel.app/api/bookings', { headers });
 
         console.log("Revenue API Response:", revenueRes.data);
         console.log("Expenses API Response:", expensesRes.data);

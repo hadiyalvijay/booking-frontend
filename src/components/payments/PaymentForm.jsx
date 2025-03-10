@@ -26,7 +26,7 @@ const PaymentForm = () => {
     const fetchBookings = async () => {
       try {
         const token = localStorage.getItem("token"); // Token ko localStorage se le raha hai
-        const res = await axios.get("http://localhost:4000/api/bookings", {
+        const res = await axios.get("http://booking-backend-five.vercel.app/api/bookings", {
           headers: {
             Authorization: `Bearer ${token}`, // Token add kiya header me
           },
@@ -67,7 +67,7 @@ const PaymentForm = () => {
 
         const fetchBookingDetails = async () => {
           try {
-            const res = await axios.get(`http://localhost:4000/api/bookings/${value}`, {
+            const res = await axios.get(`http://booking-backend-five.vercel.app/api/bookings/${value}`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -117,7 +117,7 @@ const PaymentForm = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.post("http://localhost:4000/api/payments", {
+      const res = await axios.post("http://booking-backend-five.vercel.app/api/payments", {
         bookingId: formData.bookingId,
         amount: formData.amount,
         paymentMethod: formData.paymentMethod,
