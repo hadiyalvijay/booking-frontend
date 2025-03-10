@@ -141,7 +141,7 @@ const PaymentList = () => {
         setLoading(true);
         const token = localStorage.getItem("token");
 
-        const res = await axios.get("http://booking-backend-five.vercel.app/api/payments", {
+        const res = await axios.get("http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/payments", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -160,7 +160,7 @@ const PaymentList = () => {
     const fetchBookings = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://booking-backend-five.vercel.app/api/bookings", {
+        const res = await axios.get("http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/bookings", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBookings(res.data);

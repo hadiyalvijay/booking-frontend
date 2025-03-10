@@ -20,7 +20,7 @@ const BookingDetails = () => {
 
                 console.log("Fetching Booking ID:", id);
 
-                const bookingUrl = `http://booking-backend-five.vercel.app/api/bookings/${id}`;
+                const bookingUrl = `http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/bookings/${id}`;
 
                 console.log(`Fetching Booking from: ${bookingUrl}`);
 
@@ -47,7 +47,7 @@ const BookingDetails = () => {
 
     const updateBookingStatus = async (newStatus) => {
         try {
-            await axios.patch(`http://booking-backend-five.vercel.app/api/bookings/${id}`, { status: newStatus });
+            await axios.patch(`http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/bookings/${id}`, { status: newStatus });
             setBooking({ ...booking, status: newStatus });
         } catch (err) {
             console.error('Error updating booking status:', err);
@@ -57,7 +57,7 @@ const BookingDetails = () => {
 
     const handleDeleteBooking = async () => {
         try {
-            await axios.delete(`http://booking-backend-five.vercel.app/api/bookings/${id}`);
+            await axios.delete(`http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/bookings/${id}`);
             navigate('/bookings');
         } catch (err) {
             console.error('Error deleting booking:', err);
