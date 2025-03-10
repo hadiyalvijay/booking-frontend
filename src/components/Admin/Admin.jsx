@@ -16,7 +16,7 @@ function AdminPanel() {
         const token = localStorage.getItem('token');
 
         if (token) {
-            axios.get('http://booking-backend-five.vercel.app/api/admin', {
+            axios.get('http://booking-frontend-swart.vercel.app/api/admin', {
                 headers: { Authorization: `Bearer ${token}` }
             })
                 .then(() => {

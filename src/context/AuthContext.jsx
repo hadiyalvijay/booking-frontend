@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       try {
-        const response = await axios.get('http://booking-backend-five.vercel.app/api/admin', {
+        const response = await axios.get('http://booking-frontend-swart.vercel.app/api/admin', {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     setLoading(true);
     try {
-      const res = await axios.post('http://booking-backend-five.vercel.app/api/admin/login', credentials);
+      const res = await axios.post('http://booking-frontend-swart.vercel.app/api/admin/login', credentials);
       if (res.data && res.data.token) {
         localStorage.setItem('token', res.data.token); // Changed to jwtToken
         // Also set the user name for the navbar
