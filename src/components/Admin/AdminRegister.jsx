@@ -9,7 +9,7 @@ function AdminRegister() {
         email: '',
         password: '',
         // confirmPassword: '',
-        role: 'admin'
+        role: ''
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -32,7 +32,7 @@ function AdminRegister() {
 
         try {
             // Submit to API
-            const response = await axios.post('http://booking-frontend-swart.vercel.app/api/admin/register', {
+            const response = await axios.post('http://booking-backend-five.vercel.app/api/admin/register', {
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,
