@@ -6,27 +6,27 @@ import { useAuth } from '../../context/AuthContext';
 function AdminPanel() {
     const { login } = useAuth();
     const navigate = useNavigate();
-    const [email, setEmail] = useState('admin@user.com');
-    const [password, setPassword] = useState('admin@123');
+    const [email, setEmail] = useState('admin@gmail.com');
+    const [password, setPassword] = useState('12345');
     const [loading, setLoading] = useState(false);
     const [checkingToken, setCheckingToken] = useState(true);
     const [error, setError] = useState('');
-    
+
     useEffect(() => {
         const token = localStorage.getItem('token');
-        
+
         if (token) {
-            axios.get('http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/admin', { 
-                headers: { Authorization: `Bearer ${token}` } 
+            axios.get('http://localhost:4000/api/admin', {
+                headers: { Authorization: `Bearer ${token}` }
             })
-            .then(() => {
-                setCheckingToken(false);
-                navigate('/bookings', { replace: true });
-            })
-            .catch(() => {
-                localStorage.removeItem('token');
-                setCheckingToken(false);
-            });
+                .then(() => {
+                    setCheckingToken(false);
+                    navigate('/bookings', { replace: true });
+                })
+                .catch(() => {
+                    localStorage.removeItem('token');
+                    setCheckingToken(false);
+                });
         } else {
             setCheckingToken(false);
         }
@@ -36,7 +36,7 @@ function AdminPanel() {
         e.preventDefault();
         setLoading(true);
         setError('');
-        
+
         try {
             const success = await login({ email, password });
             if (success) {
@@ -67,13 +67,13 @@ function AdminPanel() {
         <div className="flex justify-center items-center min-h-screen bg-gray-100 p-4">
             <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md sm:w-96">
                 <h2 className="text-2xl font-bold text-center mb-4">Admin Login</h2>
-                
+
                 {error && (
                     <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
                         {error}
                     </div>
                 )}
-                
+
                 <form onSubmit={handleLogin} className="space-y-4">
                     <input
                         type="email"
@@ -99,6 +99,15 @@ function AdminPanel() {
                         {loading ? 'Logging in...' : 'Login'}
                     </button>
                 </form>
+                <div className="text-center mt-4">
+                    <button
+                        type="button"
+                        onClick={() => navigate('/admin/register')}
+                        className="text-blue-500 hover:underline"
+                    >
+                        Register New Admin
+                    </button>
+                </div>
             </div>
         </div>
     );

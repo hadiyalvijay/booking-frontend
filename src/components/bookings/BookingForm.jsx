@@ -33,7 +33,7 @@ const BookingForm = () => {
   const fetchBookingDetails = async (bookingId) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/bookings/${bookingId}`, {
+      const res = await axios.get(`http://localhost:4000/api/bookings/${bookingId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setFormData(res.data);
@@ -95,13 +95,13 @@ const BookingForm = () => {
       }
 
       if (id && id !== "new") {
-        await axios.put(`http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/bookings/${id}`, {
+        await axios.put(`http://localhost:4000/api/bookings/${id}`, {
           ...formData,
           pendingAmount,
           status
         }, config);
       } else {  
-        const res = await axios.post(`http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/bookings`, {
+        const res = await axios.post(`http://localhost:4000/api/bookings`, {
           ...formData,
           pendingAmount,
           status

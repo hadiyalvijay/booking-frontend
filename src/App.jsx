@@ -18,6 +18,7 @@ import PaymentForm from './components/payments/PaymentForm';
 import PaymentList from './components/payments/PaymentList';
 import BookingDetails from './components/bookings/BookingDetails';
 import AdminPanel from './components/Admin/Admin';
+import AdminRegister from './components/Admin/AdminRegister';
 
 // Modified ProtectedRoute to have cleaner redirects
 const ProtectedRoute = ({ element }) => {
@@ -43,7 +44,7 @@ const ProtectedRoute = ({ element }) => {
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const isLoginPage = location.pathname === "/login";
+  const isLoginPage = location.pathname === "/login" || location.pathname === "/admin/register";
 
   if (isLoginPage) {
     // For login page, don't add any layout
@@ -68,6 +69,7 @@ const App = () => {
           <Layout>
             <Routes>
               {/* Login route outside of nested routes */}
+              <Route path="/admin/register" element={<AdminRegister />} />
               <Route path="/login" element={<AdminPanel />} />
               
               {/* Home redirect */}

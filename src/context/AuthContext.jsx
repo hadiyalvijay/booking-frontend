@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       try {
-        const response = await axios.get('http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/admin', {
+        const response = await axios.get('http://localhost:4000/api/admin', {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     setLoading(true);
     try {
-      const res = await axios.post('http://booking-backend-2gte2umc3-hadiyalvijay7777-gmailcoms-projects.vercel.app/api/admin/login', credentials);
+      const res = await axios.post('http://localhost:4000/api/admin/login', credentials);
       if (res.data && res.data.token) {
         localStorage.setItem('token', res.data.token); // Changed to jwtToken
         // Also set the user name for the navbar
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('jwtToken'); // Changed to jwtToken
+    localStorage.removeItem('token'); // Changed to jwtToken
     localStorage.removeItem('User Name'); // Also remove the user name
     setUser(null);
   };
