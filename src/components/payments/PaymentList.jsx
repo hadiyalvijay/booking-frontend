@@ -141,7 +141,7 @@ const PaymentList = () => {
         setLoading(true);
         const token = localStorage.getItem("token");
 
-        const res = await axios.get("http://localhost:4000/api/payments", {
+        const res = await axios.get("http://booking-backend-steel.vercel.app/api/payments", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -160,7 +160,7 @@ const PaymentList = () => {
     const fetchBookings = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:4000/api/bookings", {
+        const res = await axios.get("http://booking-backend-steel.vercel.app/api/bookings", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBookings(res.data);

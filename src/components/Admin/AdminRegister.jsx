@@ -32,7 +32,7 @@ function AdminRegister() {
 
         try {
             // Submit to API
-            const response = await axios.post('http://localhost:4000/api/admin/register', {
+            const response = await axios.post('http://booking-backend-steel.vercel.app/api/admin/register', {
                 name: formData.name,
                 email: formData.email,
                 password: formData.password,

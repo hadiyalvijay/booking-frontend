@@ -14,7 +14,7 @@ const ExpenseList = () => {
     // if (!window.confirm('Are you sure you want to delete this expense?')) return;
 
     try {
-      await axios.delete(`http://localhost:4000/api/expenses/${id}`);
+      await axios.delete(`http://booking-backend-steel.vercel.app/api/expenses/${id}`);
       // alert('Expense deleted successfully!');
       setExpenses(expenses.filter(expense => expense._id !== id)); // Update UI
     } catch (err) {
@@ -46,7 +46,7 @@ const ExpenseList = () => {
         if (filters.searchQuery) params.search = filters.searchQuery;
         if (filters.sortBy) params.sortBy = filters.sortBy;
 
-        const res = await axios.get('http://localhost:4000/api/expenses', { params });
+        const res = await axios.get('http://booking-backend-steel.vercel.app/api/expenses', { params });
 
         if (Array.isArray(res.data)) {
           setExpenses(res.data);
