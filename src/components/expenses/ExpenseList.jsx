@@ -8,13 +8,13 @@ const ExpenseList = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedReceipt, setSelectedReceipt] = useState(null);
+  // const [selectedReceipt, setSelectedReceipt] = useState(null);
 
   const handleDelete = async (id) => {
     // if (!window.confirm('Are you sure you want to delete this expense?')) return;
 
     try {
-      await axios.delete(`http://booking-backend-five.vercel.app/api/expenses/${id}`);
+      await axios.delete(`http://localhost:4000/api/expenses/${id}`);
       // alert('Expense deleted successfully!');
       setExpenses(expenses.filter(expense => expense._id !== id)); // Update UI
     } catch (err) {
@@ -23,12 +23,7 @@ const ExpenseList = () => {
     }
   };
 
-  const handleViewReceipt = (receiptUrl) => {
-    setSelectedReceipt(`${'http://booking-backend-five.vercel.app'}${receiptUrl}`);
-  };
-  const handleCloseReceipt = () => {
-    setSelectedReceipt(null);
-  };
+ 
 
   const [filters, setFilters] = useState({
     category: 'all',
@@ -51,7 +46,7 @@ const ExpenseList = () => {
         if (filters.searchQuery) params.search = filters.searchQuery;
         if (filters.sortBy) params.sortBy = filters.sortBy;
 
-        const res = await axios.get('http://booking-backend-five.vercel.app/api/expenses', { params });
+        const res = await axios.get('http://localhost:4000/api/expenses', { params });
 
         if (Array.isArray(res.data)) {
           setExpenses(res.data);
@@ -202,7 +197,7 @@ const ExpenseList = () => {
         <div className="p-4 mt-20">
           <h2 className="text-2xl font-semibold mb-4 dark:text-white">Expenses</h2>
 
-          {selectedReceipt && (
+          {/* {selectedReceipt && (
             <div className="mt-4 p-4 border rounded-md shadow-md bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold dark:text-white">Receipt Preview</h3>
@@ -210,7 +205,7 @@ const ExpenseList = () => {
               </div>
               <img src={selectedReceipt} alt="Receipt" className="w-full h-auto max-w-md mx-auto border rounded-md dark:border-gray-700" />
             </div>
-          )}
+          )} */}
 
           <div className="overflow-x-auto mt-2">
             <table className="table-auto w-full dark:bg-gray-900 shadow-md rounded-md">
@@ -221,7 +216,7 @@ const ExpenseList = () => {
                   <th className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-300">Category</th>
                   <th className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-300">Amount</th>
                   <th className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-300">Method</th>
-                  <th className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-300">Receipt</th>
+                  {/* <th className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-300">Receipt</th> */}
                   <th className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-300">Actions</th>
                 </tr>
               </thead>
@@ -233,7 +228,7 @@ const ExpenseList = () => {
                     <td className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-200">{expense.category.charAt(0).toUpperCase() + expense.category.slice(1)}</td>
                     <td className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-200">₹{expense.amount.toFixed(2)}</td>
                     <td className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-200">{expense.paymentMethod}</td>
-                    <td className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-200">
+                    {/* <td className="border-b dark:border-gray-700 px-4 py-2 dark:text-gray-200">
                       {expense.receipt ? (
                         <button
                           onClick={() => handleViewReceipt(`${expense.receipt}`)}
@@ -244,7 +239,7 @@ const ExpenseList = () => {
                       ) : (
                         "—"
                       )}
-                    </td>
+                    </td> */}
                     <td className="d-flex gap-2 border-b dark:border-gray-700 px-4 py-2">
                       <Link to={`/expenses/${expense._id}/edit`} className="block text-left text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <FontAwesomeIcon icon={faEye} className="mr-2" />

@@ -16,22 +16,22 @@ const ExpenseForm = () => {
     amount: '',
     expenseDate: new Date().toISOString().split('T')[0],
     paymentMethod: 'cash',
-    receipt: null,
+    // receipt: null,
     notes: ''
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [receiptPreview, setReceiptPreview] = useState(null);
+  // const [receiptPreview, setReceiptPreview] = useState(null);
 
   useEffect(() => {
     if (isEditMode) {
-      axios.get(`http://booking-backend-five.vercel.app/api/expenses/${id}`)
+      axios.get(`http://localhost:4000/api/expenses/${id}`)
         .then(response => {
           setFormData(response.data);
-          if (response.data.receipt) {
-            setReceiptPreview(response.data.receipt);
-          }
+          // if (response.data.receipt) {
+          //   setReceiptPreview(response.data.receipt);
+          // }
         })
         .catch(error => console.error('Error fetching expense:', error));
     }
@@ -42,17 +42,17 @@ const ExpenseForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, receipt: file });
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setReceiptPreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setFormData({ ...formData, receipt: file });
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setReceiptPreview(reader.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const validateForm = () => {
     const newErrors = {};
@@ -69,30 +69,37 @@ const ExpenseForm = () => {
     if (!validateForm()) return;
     setIsSubmitting(true);
 
-    const submitData = new FormData();
-    Object.keys(formData).forEach(key => {
-      if (formData[key] !== null) {
-        submitData.append(key, formData[key]);
-      }
-    });
+    // 🔥 Send JSON instead of FormData
+    const submitData = {
+        description: formData.description,
+        category: formData.category,
+        amount: Number(formData.amount), // Ensure number
+        expenseDate: formData.expenseDate,
+        paymentMethod: formData.paymentMethod,
+        notes: formData.notes
+    };
+
+    console.log("Sending JSON Data:", submitData);
 
     try {
-      if (isEditMode) {
-        await axios.put(`http://booking-backend-five.vercel.app/api/expenses/${id}`, submitData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-      } else {
-        await axios.post('http://booking-backend-five.vercel.app/api/expenses', submitData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-      }
-      navigate('/expenses');
+        if (isEditMode) {
+            await axios.put(`http://localhost:4000/api/expenses/${id}`, submitData, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        } else {
+            await axios.post('http://localhost:4000/api/expenses', submitData, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        navigate('/expenses');
     } catch (err) {
-      console.error('Error saving expense:', err);
-      setErrors({ submit: 'Failed to save expense' });
+        console.error('Error saving expense:', err.response ? err.response.data : err);
+        setErrors({ submit: 'Failed to save expense' });
     }
+
     setIsSubmitting(false);
-  };
+};
+
 
   // Add console log to check if ThemeContext is working (similar to BookingForm)
   console.log("Current theme:", theme);
@@ -173,7 +180,7 @@ const ExpenseForm = () => {
             <option value="paypal">PayPal</option>
           </select>
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <label className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Receipt (optional)</label>
           <input 
             type="file" 
@@ -187,7 +194,7 @@ const ExpenseForm = () => {
               <img src={receiptPreview} alt="Receipt preview" className="h-20 w-20 object-cover rounded" />
             </div>
           )}
-        </div>
+        </div> */}
         <div className="form-group">
           <label className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Additional Notes</label>
           <textarea 
