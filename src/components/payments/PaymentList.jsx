@@ -141,7 +141,7 @@ const PaymentList = () => {
         setLoading(true);
         const token = localStorage.getItem("token");
 
-        const res = await axios.get("http://booking-backend-steel.vercel.app/api/payments", {
+        const res = await axios.get("https://booking-backend-steel.vercel.app/api/payments", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -160,7 +160,7 @@ const PaymentList = () => {
     const fetchBookings = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://booking-backend-steel.vercel.app/api/bookings", {
+        const res = await axios.get("https://booking-backend-steel.vercel.app/api/bookings", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setBookings(res.data);
@@ -264,7 +264,7 @@ const PaymentList = () => {
             className="search-input px-4 py-2 border rounded-md w-full sm:w-64 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
           />
           <button type="submit" className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white px-3 py-2 gap-1 rounded-md flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-white">
+            <svg xmlns="https://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-white">
               <path d="M21 21l-4.35-4.35M17.5 10.5a7.5 7.5 0 1 0-15 0 7.5 7.5 0 0 0 15 0z"></path>
             </svg>
             Search
@@ -369,7 +369,7 @@ const PaymentList = () => {
                               {loading ? (
                                 "Loading PDF..."
                               ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none">
+                                <svg xmlns="https://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none">
                                   <path fill="#D32F2F" d="M4 2h12l6 6v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
                                   <text x="5.5" y="19" fontSize="8" fontWeight="bold" fill="white">PDF</text>
                                 </svg>

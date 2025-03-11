@@ -541,7 +541,7 @@ function Teacher() {
                             className="card-body border shadow-lg rounded-lg p-4 w-72"
                           >
                             <img
-                              src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
+                              src="httpss://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
                               className="w-full h-64 object-cover rounded-t-lg"
                               alt="Student"
                             />

@@ -416,7 +416,7 @@ function Admin() {
                       key={student._id}
                     >
                       <img
-                        src="https://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
+                        src="httpss://static.vecteezy.com/system/resources/previews/001/942/923/large_2x/student-boy-with-school-suitcase-back-to-school-free-vector.jpg"
                         className="card-img-top"
                         alt="..."
                         style={{ height: "256px" }}

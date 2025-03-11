@@ -35,7 +35,7 @@ const BookingList = () => {
         console.log("API Call with params:", params); // Debugging
 
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://booking-backend-steel.vercel.app/api/bookings', {
+        const res = await axios.get('https://booking-backend-steel.vercel.app/api/bookings', {
           params,
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -66,7 +66,7 @@ const BookingList = () => {
 
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://booking-backend-steel.vercel.app/api/bookings/${bookingId}`, {
+      await axios.delete(`https://booking-backend-steel.vercel.app/api/bookings/${bookingId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

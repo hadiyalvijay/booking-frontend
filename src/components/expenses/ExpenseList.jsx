@@ -14,7 +14,7 @@ const ExpenseList = () => {
     // if (!window.confirm('Are you sure you want to delete this expense?')) return;
 
     try {
-      await axios.delete(`http://booking-backend-steel.vercel.app/api/expenses/${id}`);
+      await axios.delete(`https://booking-backend-steel.vercel.app/api/expenses/${id}`);
       // alert('Expense deleted successfully!');
       setExpenses(expenses.filter(expense => expense._id !== id)); // Update UI
     } catch (err) {
@@ -46,7 +46,7 @@ const ExpenseList = () => {
         if (filters.searchQuery) params.search = filters.searchQuery;
         if (filters.sortBy) params.sortBy = filters.sortBy;
 
-        const res = await axios.get('http://booking-backend-steel.vercel.app/api/expenses', { params });
+        const res = await axios.get('https://booking-backend-steel.vercel.app/api/expenses', { params });
 
         if (Array.isArray(res.data)) {
           setExpenses(res.data);
@@ -125,7 +125,7 @@ const ExpenseList = () => {
             className="border border-gray-300 dark:border-gray-600 px-4 py-2 rounded-md w-full sm:w-64 dark:bg-gray-800 dark:text-white"
           />
           <button type="submit" className="bg-blue-500 text-white px-3 py-2 gap-1 rounded-md flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-white">
+            <svg xmlns="https://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-white">
               <path d="M21 21l-4.35-4.35M17.5 10.5a7.5 7.5 0 1 0-15 0 7.5 7.5 0 0 0 15 0z"></path>
             </svg>
             Search

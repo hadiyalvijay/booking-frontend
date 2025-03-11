@@ -26,7 +26,7 @@ const ExpenseForm = () => {
 
   useEffect(() => {
     if (isEditMode) {
-      axios.get(`http://booking-backend-steel.vercel.app/api/expenses/${id}`)
+      axios.get(`https://booking-backend-steel.vercel.app/api/expenses/${id}`)
         .then(response => {
           setFormData(response.data);
           // if (response.data.receipt) {
@@ -83,11 +83,11 @@ const ExpenseForm = () => {
 
     try {
         if (isEditMode) {
-            await axios.put(`http://booking-backend-steel.vercel.app/api/expenses/${id}`, submitData, {
+            await axios.put(`https://booking-backend-steel.vercel.app/api/expenses/${id}`, submitData, {
                 headers: { 'Content-Type': 'application/json' }
             });
         } else {
-            await axios.post('http://booking-backend-steel.vercel.app/api/expenses', submitData, {
+            await axios.post('https://booking-backend-steel.vercel.app/api/expenses', submitData, {
                 headers: { 'Content-Type': 'application/json' }
             });
         }

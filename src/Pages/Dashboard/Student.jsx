@@ -266,7 +266,7 @@ function Student() {
                     >
                       <div>
                         <img
-                          src="https://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg"
+                          src="httpss://static.vecteezy.com/system/resources/previews/002/406/452/non_2x/female-teacher-teaching-a-lesson-at-the-school-free-vector.jpg"
                           className="w-full"
                           alt="..."
                         />
