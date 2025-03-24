@@ -369,3 +369,13 @@ button.hidden {
         padding: 10px 0;
     }
 }
+.profile-section{
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.close-btn{
+    background-color: transparent;
+    left: 230px;
+}

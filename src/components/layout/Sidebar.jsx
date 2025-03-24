@@ -14,8 +14,8 @@ const Sidebar = ({ closeSidebar }) => {
         </button>
 
         <div className="profile-section">
-          <img src="/profile-placeholder.jpg" alt="Profile" />
-          <h3>DJ Name</h3>
+          <img src="/public/assets/QBill__2.png" alt="Profile" />
+          <h3>DJ Booking</h3>
         </div>
 
         <ul className="menu-items">
