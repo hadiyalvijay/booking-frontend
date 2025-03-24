@@ -161,7 +161,7 @@ const ExpenseList = () => {
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
   return (
-    <div className="container-fluid mx-auto p-2 sm:p-4 mt-80 sm:mt-24 w-full" style={{width: '80vw'}}>
+    <div className="container-fluid mx-auto p-2 sm:p-4 mt-24 sm:mt-24 w-full" style={{width: '80vw'}}>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
         <h2 className="text-2xl font-semibold mb-2 sm:mb-0 dark:text-white">Expenses</h2>
         <div className="text-xl font-bold mb-2 sm:mb-0 dark:text-white">Total: <span className="text-green-600 dark:text-green-400">₹{summary.totalAmount.toFixed(2)}</span></div>
