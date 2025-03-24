@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" class="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./public/assets/QBill__2.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DJ-Booking</title>
+    <style>
+      /* Logo styling */
+      .app-logo {
+        height: 100vh;
+        width: 100vw;
+        display: block;
+      }
+      
+      .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      
+      /* Preload logo for faster rendering */
+      body::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+        z-index: -1;
+        background: url('./public/assets/logo.png') no-repeat;
+      }
+      
+      /* Logo animation for initial load */
+      @keyframes logo-spin {
+        from {
+          transform: translateY(-10px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+      .app-logo {
+        animation: logo-spin 0.5s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <!-- Optional: Add a loading logo that shows before React loads -->
+      <div class="logo-container">
+        <img src="./public/assets/logo.png" alt="DJ-Booking Logo" class="app-logo" />
+      </div>
+    </div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
