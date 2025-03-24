@@ -4,7 +4,6 @@ import { faGooglePlusG, faFacebookF, faGithub, faLinkedinIn } from '@fortawesome
 import './PageTransition.css';
 
 const Admin = () => {
-    // State for form inputs and active state
     const [isActive, setIsActive] = useState(false);
     const [signupData, setSignupData] = useState({
         name: '',
@@ -17,7 +16,6 @@ const Admin = () => {
     });
     const [users, setUsers] = useState([]);
 
-    // Load users from localStorage on component mount
     useEffect(() => {
         const storedUsers = localStorage.getItem('users');
         if (storedUsers) {
@@ -25,12 +23,10 @@ const Admin = () => {
         }
     }, []);
 
-    // Save users to localStorage whenever it changes
     useEffect(() => {
         localStorage.setItem('users', JSON.stringify(users));
     }, [users]);
 
-    // Handle input changes for signup form
     const handleSignupChange = (e) => {
         const { name, value } = e.target;
         setSignupData(prev => ({
@@ -39,7 +35,6 @@ const Admin = () => {
         }));
     };
 
-    // Handle input changes for signin form
     const handleSigninChange = (e) => {
         const { name, value } = e.target;
         setSigninData(prev => ({
@@ -48,49 +43,32 @@ const Admin = () => {
         }));
     };
 
-    // Handle signup form submission
     const handleSignup = (e) => {
         e.preventDefault();
-
-        // Basic validation
         if (!signupData.name || !signupData.email || !signupData.password) {
             alert('Please fill all fields');
             return;
         }
-
-        // Check if user already exists
         if (users.some(user => user.email === signupData.email)) {
             alert('User with this email already exists');
             return;
         }
-
-        // Add new user
         const newUsers = [...users, signupData];
         setUsers(newUsers);
-
-        // Clear form
         setSignupData({ name: '', email: '', password: '' });
-
-        // Switch to sign in
         setIsActive(false);
         alert('Account created successfully! Please sign in.');
     };
 
-    // Handle signin form submission
     const handleSignin = (e) => {
         e.preventDefault();
-
-        // Basic validation
         if (!signinData.email || !signinData.password) {
             alert('Please fill all fields');
             return;
         }
-
-        // Check credentials
         const user = users.find(user =>
             user.email === signinData.email && user.password === signinData.password
         );
-
         if (user) {
             localStorage.setItem('currentUser', JSON.stringify(user));
             alert(`Welcome back, ${user.name}!`);
@@ -101,8 +79,8 @@ const Admin = () => {
     };
 
     return (
-        <div className="login-container">
-            <div className={`container ${isActive ? 'active' : ''}`} id="login" style={{ width: '70vw', height: '80vh' }}>
+        <div className="login-container" style={{ width: '85vw'}}>
+            <div className={`container ${isActive ? 'active' : ''}`} id="login" style={{ height: '85vh' }} >
                 <div className="form-container sign-up">
                     <form onSubmit={handleSignup}>
                         <h1>Create Account</h1>
@@ -134,7 +112,17 @@ const Admin = () => {
                             value={signupData.password}
                             onChange={handleSignupChange}
                         />
-                        <button type="submit">Sign Up</button>
+                        <button type="submit" className="color-blue">Sign Up</button>
+                        <div className="mobile-toggle mt-3 text-sm">
+                            <span>Already have an account? </span>
+                            <span
+                                type="button"
+                                className="color-blue "
+                                onClick={() => setIsActive(false)}
+                            >
+                                Sign In
+                            </span>
+                        </div>
                     </form>
                 </div>
                 <div className="form-container sign-in">
@@ -162,7 +150,17 @@ const Admin = () => {
                             onChange={handleSigninChange}
                         />
                         <a href="#" className="forgot-password">Forget Your Password?</a>
-                        <button type="submit">Sign In</button>
+                        <button type="submit" className="color-blue">Sign In</button>
+                        <div className="mobile-toggle mt-3 text-sm">
+                            <span>Don't have an account? </span>
+                            <span
+                                type="button"
+                                className="color-blue "
+                                onClick={() => setIsActive(true)}
+                            >
+                                Sign Up
+                            </span>
+                        </div>
                     </form>
                 </div>
                 <div className="toggle-container">
@@ -177,12 +175,12 @@ const Admin = () => {
                             >
                                 Sign In
                             </button>
-
-                            
-                            <button className="toggle-button" onClick={() => setIsActive(!isActive)}>
+                            <button
+                                className="toggle-button  w-auto text-white px-4 py-2 rounded-md bg-#5234ab sm:w-auto text-center mt-2"
+                                onClick={() => setIsActive(!isActive)}
+                            >
                                 {isActive ? 'Sign In' : 'Sign Up'}
                             </button>
-                            
                         </div>
                         <div className="toggle-panel toggle-right">
                             <h1>Hello, Friend!</h1>
@@ -194,8 +192,10 @@ const Admin = () => {
                             >
                                 Sign Up
                             </button>
-
-                            <button className="toggle-button" onClick={() => setIsActive(!isActive)}>
+                            <button
+                                className="toggle-button w-auto text-white px-4 py-2 rounded-md bg-#5234ab sm:w-auto text-center mt-2"
+                                onClick={() => setIsActive(!isActive)}
+                            >
                                 {isActive ? 'Sign In' : 'Sign Up'}
                             </button>
                         </div>

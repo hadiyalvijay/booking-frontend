@@ -250,7 +250,7 @@ const PaymentList = () => {
   if (error) return <div className="error-message text-center p-4 text-red-500 dark:bg-gray-900">{error}</div>;
 
   return (
-    <div className="container-fluid mx-auto p-2 sm:p-4 mt-24 sm:mt-24 w-full" style={{width: "80vw"}}>
+    <div className="container-fluid mx-auto p-2 sm:p-4 mt-40 sm:mt-24 w-full" style={{width: "80vw"}}>
       <div className="header-actions flex flex-col sm:flex-row justify-between items-center mb-6">
         <div className="mb-4 sm:mb-0">
           <h2 className="text-2xl font-bold">Payments</h2>

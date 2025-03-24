@@ -150,8 +150,8 @@ const BookingList = () => {
   if (loading) return <div className="text-center text-gray-500">Loading...</div>;
   if (error) return <div className="text-center text-red-500">{error}</div>;
 
-  return (
-    <div className="container-fluid mx-auto p-2 sm:p-4 mt-24 sm:mt-24 w-full" style={{width: "80vw"}}>
+  return (   
+    <div className="container-fluid mx-auto p-2 sm:p-4 mt-28 sm:mt-24 w-full" style={{width: "80vw"}}>
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
         <h2 className="text-xl sm:text-2xl font-semibold dark:text-white">Bookings</h2>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">

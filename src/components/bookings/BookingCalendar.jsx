@@ -10,37 +10,42 @@ const calendarStyles = {
   dayPropGetter: (date) => {
     const today = moment().startOf('day').toDate();
     const isToday = moment(date).isSame(today, 'day');
-    const isisDarkMode = document.documentElement.classList.contains('dark');
+    const isDarkMode = document.documentElement.classList.contains('dark');
     
     return {
-      className: isToday ? (isisDarkMode ? 'bg-blue-900' : 'bg-blue-50') : '',
+      className: isToday ? (isDarkMode ? 'bg-cyan-900' : 'bg-cyan-200') : '',
       style: { 
-        border: isisDarkMode ? '1px solid #374151' : '1px solid #e5e7eb',
-        backgroundColor: isisDarkMode ? '#1f2937' : '',
-        color: isisDarkMode ? '#f3f4f6' : ''
+        border: isDarkMode ? '1px solid #2d3748' : '1px solid #e2e8f0',
+        backgroundColor: isDarkMode ? 'rgba(26, 32, 44, 0.8)' : 'rgba(255, 255, 255, 0.9)',
+        color: isDarkMode ? '#e2e8f0' : '#2d3748',
+        backdropFilter: 'blur(5px)',
       }
     };
   },
   eventPropGetter: (event) => {
-    let backgroundColor = '#3b82f6';
-    const eventType = event.resource?.eventType ? event.resource.eventType.toLowerCase() : '';
+    let backgroundColor = 'linear-gradient(135deg, #00ddeb, #00b7c2)';
+    const eventType = event.resource?.eventType?.toLowerCase() || '';
 
     if (eventType.includes('wedding')) {
-      backgroundColor = '#8b5cf6';
+      backgroundColor = 'linear-gradient(135deg, #ff6bd6, #d946ef)';
     } else if (eventType.includes('corporate')) {
-      backgroundColor = '#10b981';
+      backgroundColor = 'linear-gradient(135deg, #00e676, #00c853)';
     } else if (eventType.includes('party')) {
-      backgroundColor = '#f59e0b';
+      backgroundColor = 'linear-gradient(135deg, #ffaa00, #ff7b00)';
     }
 
     return {
       style: {
-        backgroundColor,
-        borderRadius: '8px',
-        opacity: 0.9,
-        color: 'white',
-        padding: '5px',
-        border: '0px',
+        background: backgroundColor,
+        borderRadius: '10px',
+        opacity: 0.95,
+        color: '#fff',
+        padding: '3px 6px',
+        border: 'none',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+        fontSize: '10px',
+        fontWeight: '600',
+        transition: 'transform 0.2s',
       }
     };
   }
@@ -53,49 +58,61 @@ const BookingCalendar = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isisDarkMode, setIsisDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Detect dark mode changes
   useEffect(() => {
-    // Check if dark mode is enabled
     const isDarkModeEnabled = document.documentElement.classList.contains('dark');
-    setIsisDarkMode(isDarkModeEnabled);
+    setIsDarkMode(isDarkModeEnabled);
 
-    // Listen for dark mode changes
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
-          setIsisDarkMode(document.documentElement.classList.contains('dark'));
+          setIsDarkMode(document.documentElement.classList.contains('dark'));
         }
       });
     });
 
     observer.observe(document.documentElement, { attributes: true });
-
     return () => observer.disconnect();
   }, []);
 
+  // Fetch bookings from localStorage
   useEffect(() => {
     const fetchBookings = () => {
       setLoading(true);
       try {
-        // Get bookings from localStorage
-        const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-        
-        // If id is provided, filter for specific booking
+        const storedBookings = localStorage.getItem('bookings');
+        if (!storedBookings) {
+          console.warn('No bookings found in localStorage. Initializing with empty array.');
+          localStorage.setItem('bookings', JSON.stringify([]));
+        }
+
+        const bookings = JSON.parse(storedBookings || '[]');
         const filteredBookings = id ? bookings.filter(b => b._id === id) : bookings;
 
-        const calendarEvents = filteredBookings.map(booking => ({
-          id: booking._id,
-          title: `${booking.clientName} - ${booking.eventType || 'Unknown'}`,
-          start: new Date(booking.startDateTime),
-          end: new Date(booking.endDateTime),
-          resource: booking
-        }));
+        const calendarEvents = filteredBookings.map(booking => {
+          if (!booking._id || !booking.startDateTime || !booking.endDateTime) {
+            console.error('Invalid booking data:', booking);
+            throw new Error('Invalid booking data structure');
+          }
+          return {
+            id: booking._id,
+            title: `${booking.clientName || 'Unknown'} - ${booking.eventType || 'Event'}`,
+            start: new Date(booking.startDateTime),
+            end: new Date(booking.endDateTime),
+            resource: {
+              ...booking,
+              totalAmount: booking.totalAmount ? Number(booking.totalAmount) : null // Convert to number
+            }
+          };
+        });
 
         setEvents(calendarEvents);
         setError(null);
       } catch (err) {
-        setError('Failed to load bookings from storage.');
+        console.error('Error fetching bookings:', err);
+        setError('Failed to load bookings from localStorage.');
       } finally {
         setLoading(false);
       }
@@ -105,172 +122,291 @@ const BookingCalendar = () => {
   }, [id]);
 
   const handleSelectEvent = (event) => {
-    setSelectedEvent(event.resource);
-    setShowModal(true);
+    console.log('Event clicked:', event);
+    if (event && event.resource) {
+      setSelectedEvent(event.resource);
+      setShowModal(true);
+      console.log(`Viewing details for event: ${event.id}`);
+    } else {
+      console.error('No resource found in event:', event);
+    }
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setSelectedEvent(null);
+    setTimeout(() => setSelectedEvent(null), 300);
   };
 
   const formatDateTime = (dateTimeStr) => moment(dateTimeStr).format('MMM D, YYYY h:mm A');
 
   const handleCancelBooking = (bookingId) => {
-    if (window.confirm('Are you sure you want to cancel this booking?')) {
+    if (window.confirm('Cancel this event?')) {
       try {
-        // Get current bookings
         const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
-        // Filter out the cancelled booking
         const updatedBookings = bookings.filter(b => b._id !== bookingId);
-        // Save back to localStorage
         localStorage.setItem('bookings', JSON.stringify(updatedBookings));
-        // Update events state
         setEvents(events.filter(event => event.id !== bookingId));
-        // Close modal
         closeModal();
       } catch (err) {
         console.error('Error cancelling booking:', err);
-        setError('Failed to cancel booking');
+        setError('Failed to cancel event.');
       }
     }
   };
 
+  const EventModal = ({ event, onClose, onCancel }) => (
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 animate-fadeIn">
+      <div 
+        className={`${isDarkMode ? 'bg-gray-900/90 text-gray-100' : 'bg-white/90 text-gray-900'} 
+          p-4 sm:p-6 rounded-2xl shadow-xl w-11/12 sm:w-96 md:w-[28rem] 
+          backdrop-blur-md border ${isDarkMode ? 'border-gray-800' : 'border-gray-300'} 
+          max-h-[85vh] overflow-y-auto animate-slideUp`}
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h5 className="text-lg font-bold tracking-wide text-cyan-400 drop-shadow truncate">
+            {event.clientName}
+          </h5>
+          <button 
+            onClick={onClose} 
+            className={`${isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-700'} 
+              text-2xl font-bold hover:scale-110 transition-transform`}
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+        
+        <div className="space-y-4 text-sm">
+          <div className="grid grid-cols-1 gap-2">
+            <p><span className="font-semibold text-cyan-400">Event:</span> {event.eventType || 'N/A'}</p>
+            <p>
+              <span className="font-semibold text-cyan-400">Time:</span> 
+              {formatDateTime(event.startDateTime)} - {formatDateTime(event.endDateTime)}
+            </p>
+            <p><span className="font-semibold text-cyan-400">Location:</span> {event.location || 'N/A'}</p>
+            <p>
+              <span className="font-semibold text-cyan-400">Amount:</span> 
+              ₹{typeof event.totalAmount === 'number' ? event.totalAmount.toFixed(2) : 'N/A'}
+            </p>
+            <p>
+              <span className="font-semibold text-cyan-400">Status:</span>
+              <span className={`ml-2 px-2 py-1 rounded-full text-xs ${
+                event.status === 'Confirmed' ? 'bg-green-500/20 text-green-400' :
+                event.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-400' :
+                'bg-red-500/20 text-red-400'
+              }`}>
+                {event.status || 'Pending'}
+              </span>
+            </p>
+            {event.notes && (
+              <p>
+                <span className="font-semibold text-cyan-400">Notes:</span>
+                <span className="block mt-1 text-gray-300">{event.notes}</span>
+              </p>
+            )}
+          </div>
+          
+          <div className="flex flex-col sm:flex-row justify-end gap-3 mt-5">
+            <button
+              onClick={() => window.location.href = `/edit-booking/${event._id}`}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-magenta-500 to-magenta-700 
+                hover:from-magenta-600 hover:to-magenta-800 text-white shadow-lg 
+                hover:shadow-magenta-500/50 transition-all duration-300"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => onCancel(event._id)}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-red-700 
+                hover:from-red-600 hover:to-red-800 text-white shadow-lg 
+                hover:shadow-red-500/50 transition-all duration-300"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className={`container mx-auto p-4 mt-20 ${isisDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className={`text-3xl font-extrabold ${isisDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>DJ Booking Calendar</h2>
-        <button
-          onClick={() => window.location.href = '/new-booking'}
-          className={`${isisDarkMode ? 'bg-blue-700 hover:bg-blue-800' : 'bg-blue-600 hover:bg-blue-700'} text-white px-6 py-2 rounded-lg shadow-md transition duration-300`}
-        >
-          New Booking
-        </button>
+    <div className={`min-h-screen p-4 sm:p-6 flex items-center justify-center`} style={{ width: "90vw" }}>
+      <div className="max-w-4xl w-full">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+          <h2 className={`text-2xl sm:text-3xl font-extrabold ${isDarkMode ? 'text-cyan-400' : 'text-cyan-600'} tracking-tight drop-shadow-md`}>
+            Event Matrix
+          </h2>
+          <button
+            onClick={() => window.location.href = '/new-booking'}
+            className={`mt-3 sm:mt-0 px-5 py-2 rounded-xl font-semibold text-white bg-gradient-to-r from-cyan-500 to-cyan-700 hover:from-cyan-600 hover:to-cyan-800 shadow-lg hover:shadow-cyan-500/50 transition-all duration-300`}
+          >
+            New Event
+          </button>
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className={`animate-spin h-10 w-10 border-t-4 ${isDarkMode ? 'border-cyan-400' : 'border-cyan-600'} border-solid rounded-full`}></div>
+          </div>
+        ) : error ? (
+          <div className={`${isDarkMode ? 'bg-red-950 text-red-300' : 'bg-red-300 text-red-900'} p-4 rounded-xl shadow-md`}>{error}</div>
+        ) : (
+          <div className={`${isDarkMode ? 'bg-gray-900/80' : 'bg-white/80'} rounded-2xl shadow-2xl p-4 sm:p-6 backdrop-blur-md border ${isDarkMode ? 'border-gray-800' : 'border-gray-300'}`}>
+            <div style={{ height: window.innerWidth < 640 ? '400px' : '600px' }}>
+              <Calendar
+                localizer={localizer}
+                events={events}
+                startAccessor="start"
+                endAccessor="end"
+                selectable
+                onSelectEvent={handleSelectEvent}
+                views={['month', 'week', 'day']}
+                dayPropGetter={calendarStyles.dayPropGetter}
+                eventPropGetter={calendarStyles.eventPropGetter}
+                className={`rounded-xl ${isDarkMode ? 'dark-mode-calendar' : ''}`}
+              />
+            </div>
+          </div>
+        )}
+
+        {showModal && selectedEvent && (
+          <EventModal 
+            event={selectedEvent}
+            onClose={closeModal}
+            onCancel={handleCancelBooking}
+          />
+        )}
       </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-52">
-          <div className={`animate-spin h-12 w-12 border-t-4 ${isisDarkMode ? 'border-blue-400' : 'border-blue-500'} border-solid rounded-full`}></div>
-        </div>
-      ) : error ? (
-        <div className={`${isisDarkMode ? 'bg-red-900 text-red-200' : 'bg-red-100 text-red-700'} p-4 rounded-lg`}>{error}</div>
-      ) : (
-        <div className={`${isisDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow-lg p-6 rounded-lg border`}>
-          <div 
-            style={{ height: '600px' }} 
-            className={isisDarkMode ? 'dark-calendar' : ''}
-          >
-            <Calendar
-              localizer={localizer}
-              events={events}
-              startAccessor="start"
-              endAccessor="end"
-              selectable
-              onSelectEvent={handleSelectEvent}
-              views={['month', 'week', 'day', 'agenda']}
-              dayPropGetter={calendarStyles.dayPropGetter}
-              eventPropGetter={calendarStyles.eventPropGetter}
-              className={`text-sm ${isisDarkMode ? 'dark-mode-calendar' : ''}`}
-            />
-          </div>
-        </div>
-      )}
+      {/* Move styles to a separate CSS file or use CSS-in-JS */}
+      <style>
+        {`
+          .animate-fadeIn {
+            animation: fadeIn 0.3s ease-in-out;
+          }
+          
+          .animate-slideUp {
+            animation: slideUp 0.3s ease-out;
+          }
+          
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+          
+          @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+          }
 
-      {showModal && selectedEvent && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-          <div className={`${isisDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-800'} p-6 rounded-lg shadow-2xl w-full max-w-lg relative`}>
-            <div className="flex justify-between items-center mb-4">
-              <h5 className="text-xl font-semibold">{selectedEvent.clientName}</h5>
-              <button onClick={closeModal} className={`${isisDarkMode ? 'text-gray-300 hover:text-gray-100' : 'text-gray-600 hover:text-gray-900'} text-2xl font-bold`}>&times;</button>
-            </div>
-            <p><strong>Event Type:</strong> {selectedEvent.eventType || 'N/A'}</p>
-            <p><strong>Date & Time:</strong> {formatDateTime(selectedEvent.startDateTime)} - {formatDateTime(selectedEvent.endDateTime)}</p>
-            <p><strong>Location:</strong> {selectedEvent.location || 'N/A'}</p>
-            <p><strong>Amount:</strong> ₹{selectedEvent.totalAmount ? selectedEvent.totalAmount.toFixed(2) : 'N/A'}</p>
-            <p><strong>Status:</strong> {selectedEvent.status || 'Unknown'}</p>
-            {selectedEvent.notes && <p><strong>Notes:</strong> {selectedEvent.notes}</p>}
+          .dark-mode-calendar .rbc-toolbar {
+            background: ${isDarkMode ? 'rgba(26, 32, 44, 0.9)' : 'rgba(243, 244, 246, 0.9)'};
+            color: ${isDarkMode ? '#e2e8f0' : '#2d3748'};
+            padding: 6px;
+            border-radius: 12px 12px 0 0;
+            flex-direction: column;
+            gap: 4px;
+            backdrop-filter: blur(5px);
+          }
+          
+          .dark-mode-calendar .rbc-toolbar button {
+            background: ${isDarkMode ? '#4a5568' : '#e2e8f0'};
+            color: ${isDarkMode ? '#e2e8f0' : '#2d3748'};
+            border: none;
+            padding: 5px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.3s;
+          }
+          
+          .dark-mode-calendar .rbc-toolbar button:hover {
+            background: ${isDarkMode ? '#00ddeb' : '#00b7c2'};
+            color: #fff;
+          }
+          
+          .dark-mode-calendar .rbc-toolbar button.rbc-active {
+            background: ${isDarkMode ? '#00ddeb' : '#00b7c2'};
+            color: #fff;
+          }
+          
+          .dark-mode-calendar .rbc-header {
+            background: ${isDarkMode ? 'rgba(45, 55, 72, 0.8)' : 'rgba(247, 250, 252, 0.8)'};
+            color: ${isDarkMode ? '#e2e8f0' : '#4a5568'};
+            padding: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            backdrop-filter: blur(5px);
+          }
+          
+          .dark-mode-calendar .rbc-month-view, 
+          .dark-mode-calendar .rbc-time-view {
+            border-radius: 0 0 12px 12px;
+            overflow: hidden;
+          }
+          
+          .dark-mode-calendar .rbc-day-bg {
+            transition: all 0.2s;
+          }
+          
+          .dark-mode-calendar .rbc-day-bg:hover {
+            background: ${isDarkMode ? 'rgba(45, 55, 72, 0.8)' : 'rgba(203, 213, 224, 0.5)'};
+          }
+          
+          .dark-mode-calendar .rbc-off-range-bg {
+            background: ${isDarkMode ? 'rgba(23, 25, 35, 0.8)' : 'rgba(237, 242, 247, 0.8)'};
+          }
+          
+          .dark-mode-calendar .rbc-date-cell {
+            font-size: 11px;
+            padding: 3px;
+            text-align: center;
+          }
+          
+          .dark-mode-calendar .rbc-today {
+            background: ${isDarkMode ? 'rgba(45, 55, 72, 0.9)' : 'rgba(236, 254, 255, 0.9)'};
+          }
+          
+          .dark-mode-calendar .rbc-event:hover {
+            transform: scale(1.05);
+          }
 
-            <div className="flex justify-end space-x-3 mt-4">
-              <button
-                onClick={() => window.location.href = `/edit-booking/${selectedEvent._id}`}
-                className={`${isisDarkMode ? 'bg-blue-700 hover:bg-blue-800' : 'bg-blue-600 hover:bg-blue-700'} text-white px-4 py-2 rounded-lg shadow-md transition duration-300`}
-              >
-                Edit Booking
-              </button>
-              <button
-                onClick={() => handleCancelBooking(selectedEvent._id)}
-                className={`${isisDarkMode ? 'bg-red-700 hover:bg-red-800' : 'bg-red-600 hover:bg-red-700'} text-white px-4 py-2 rounded-lg shadow-md transition duration-300`}
-              >
-                Cancel Booking
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style jsx>{`
-        .dark-mode-calendar .rbc-toolbar {
-          color: ${isisDarkMode ? '#f3f4f6' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-toolbar button {
-          color: ${isisDarkMode ? '#f3f4f6' : 'inherit'};
-          background-color: ${isisDarkMode ? '#374151' : 'inherit'};
-          border-color: ${isisDarkMode ? '#4b5563' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-toolbar button:hover {
-          background-color: ${isisDarkMode ? '#4b5563' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-toolbar button.rbc-active {
-          background-color: ${isisDarkMode ? '#3b82f6' : 'inherit'};
-          color: white;
-        }
-        
-        .dark-mode-calendar .rbc-header {
-          background-color: ${isisDarkMode ? '#374151' : 'inherit'};
-          color: ${isisDarkMode ? '#f3f4f6' : 'inherit'};
-          border-color: ${isisDarkMode ? '#4b5563' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-month-view, 
-        .dark-mode-calendar .rbc-time-view {
-          border-color: ${isisDarkMode ? '#4b5563' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-day-bg {
-          background-color: ${isisDarkMode ? '#1f2937' : 'inherit'};
-          color: ${isisDarkMode ? '#f3f4f6' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-off-range-bg {
-          background-color: ${isisDarkMode ? '#111827' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-date-cell {
-          color: ${isisDarkMode ? '#f3f4f6' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-today {
-          background-color: ${isisDarkMode ? '#374151' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-agenda-view table.rbc-agenda-table {
-          border-color: ${isisDarkMode ? '#4b5563' : 'inherit'};
-          color: ${isisDarkMode ? '#f3f4f6' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-agenda-view table.rbc-agenda-table thead > tr > th {
-          border-color: ${isisDarkMode ? '#4b5563' : 'inherit'};
-          background-color: ${isisDarkMode ? '#374151' : 'inherit'};
-          color: ${isisDarkMode ? '#f3f4f6' : 'inherit'};
-        }
-        
-        .dark-mode-calendar .rbc-agenda-view table.rbc-agenda-table tbody > tr > td {
-          border-color: ${isisDarkMode ? '#4b5563' : 'inherit'};
-        }
-      `}</style>
+          @media (max-width: 640px) {
+            .rbc-month-view .rbc-row {
+              min-height: 50px;
+            }
+            .rbc-month-view .rbc-date-cell {
+              font-size: 9px;
+              padding: 2px;
+            }
+            .rbc-event {
+              padding: 2px 4px !important;
+              font-size: 9px !important;
+              border-radius: 6px !important;
+            }
+            .rbc-toolbar {
+              padding: 4px;
+              gap: 3px;
+            }
+            .rbc-btn-group {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 3px;
+            }
+            .rbc-btn-group button {
+              flex: 1;
+              min-width: 70px;
+              padding: 4px 8px;
+              font-size: 10px;
+            }
+            .dark-mode-calendar .rbc-header {
+              font-size: 10px;
+              padding: 4px;
+            }
+          }
+        `}
+      </style>
     </div>
   );
 };

@@ -166,29 +166,6 @@ const Navbar = () => {
           )}
 
           <div className="d-flex align-items-center">
-            <button 
-              onClick={toggleTheme} 
-              className=""
-              style={{
-                // backgroundColor: "rgba(255, 255, 255, 0.1)",
-                // borderRadius: "10px",
-                // border: "1px solid rgba(255, 255, 255, 0.2)",
-                transition: "all 0.3s ease"
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.transform = "translateY(-2px)";
-                e.target.style.backgroundColor = "rgba(255, 255, 255, 0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.transform = "translateY(0)";
-                e.target.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-              }}
-            >
-              {theme === "light" ? 
-                <FaMoon size={20} className="text-white" /> : 
-                <FaSun size={20} className="text-white" />
-              }
-            </button>
 
             {localData ? (
               <div className="dropdown" ref={dropdownRef}>
