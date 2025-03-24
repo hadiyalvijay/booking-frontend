@@ -80,7 +80,7 @@ const Admin = () => {
 
     return (
         <div className="login-container" style={{ width: '85vw'}}>
-            <div className={`container ${isActive ? 'active' : ''}`} id="login" style={{ height: '85vh' }} >
+            <div className={`container rounded-md  ${isActive ? 'active' : ''}`} id="login" style={{ height: '85vh' }} >
                 <div className="form-container sign-up">
                     <form onSubmit={handleSignup}>
                         <h1>Create Account</h1>
